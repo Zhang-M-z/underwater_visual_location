@@ -14,9 +14,12 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   cv_bridge
   image_transport
+  geometry_msgs
+  
 )
 find_package(OpenCV REQUIRED)
 find_package(Eigen3 REQUIRED)
+
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
@@ -113,6 +116,7 @@ catkin_package(
 #  DEPENDS system_lib
 )
 
+
 ###########
 ## Build ##
 ###########
@@ -122,6 +126,8 @@ catkin_package(
 include_directories(include ${catkin_INCLUDE_DIRS})
 include_directories(include ${OpenCV_INCLUDE_DIRS})
 include_directories(include ${EIGEN3_INCLUDE_DIR})
+
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/visual_location.cpp
@@ -139,14 +145,23 @@ include_directories(include ${EIGEN3_INCLUDE_DIR})
 add_executable(camera_capture src/camera_capture.cpp)
 add_library(detector src/detector.cpp)
 add_executable(detector_node src/detector_node.cpp)
-add_library(pnp_solver src/pnp_solver.cpp)
+
 
 target_link_libraries(camera_capture ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 target_link_libraries(detector ${catkin_LIBRARIES} ${OpenCV_LIBRARIES}) 
-target_link_libraries(detector_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} detector pnp_solver)
-target_link_libraries(pnp_solver ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(detector_node ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} detector)
+
 
 add_dependencies(detector_node ${detector_node_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+
+catkin_install_python(PROGRAMS 
+        scripts/device_model.py
+        scripts/IMUrunner.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+
+#set(PYTHON_INSTALL_DIR ${CATKIN_PACKAGE_BIN_DESTINATION})
+
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -172,10 +187,7 @@ add_dependencies(detector_node ${detector_node_EXPORTED_TARGETS} ${catkin_EXPORT
 
 ## Mark executable scripts (Python etc.) for installation
 ## in contrast to setup.py, you can choose the destination
-# catkin_install_python(PROGRAMS
-#   scripts/my_python_script
-#   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-# )
+
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html

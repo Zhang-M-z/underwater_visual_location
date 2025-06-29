@@ -1,6 +1,6 @@
 #include <visual_location/camera_capture.hpp>
  
-std::string  source = "rtsp://192.168.1.64:554";
+
 int main(int argc,char **argv)
 {
     ros::init(argc,argv,"image_publisher");
@@ -9,11 +9,11 @@ int main(int argc,char **argv)
       // Open camera with CAMERA_INDEX (webcam is typically #0).
   //const int CAMERA_INDEX = 0;
   //cv::VideoCapture capture( CAMERA_INDEX, cv::CAP_V4L2); //摄像头视频的读操作
-  cv::VideoCapture capture( source, cv::CAP_ANY);
+  cv::VideoCapture capture( 0, cv::CAP_V4L2);
   if( not capture.isOpened() )
   {
     ROS_ERROR_STREAM(
-      "Failed to open camera with index " << source << "!"
+      "Failed to open camera with index " << 0 << "!"
     );
     ros::shutdown();//打开失败则关闭节点
   }
