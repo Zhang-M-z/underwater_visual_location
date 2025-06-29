@@ -15,6 +15,7 @@ class send_signal:
         :param stopbits: 停止位
         :param timeout: 超时时间
         """
+        # 1
         self.port = port
         self.baudrate = baudrate
         self.bytesize = bytesize
